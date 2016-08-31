@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="rainbowbar">
+        <attr name="rainbowbar_hspace" format="dimension"></attr>
+        <attr name="rainbowbar_vspace" format="dimension"></attr>
+        <attr name="rainbowbar_color" format="color"></attr>
+    </declare-styleable>
+</resources>
