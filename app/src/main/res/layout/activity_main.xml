@@ -1,24 +1,41 @@
-<?xml version="1.0" encoding="utf-8"?><!--<demo.RainbowBar--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--app:rainbowbar_color="@android:color/holo_blue_bright"--><!--app:rainbowbar_hspace="80dp"--><!--app:rainbowbar_vspace="10dp" />-->
+<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:background="@color/red"
+    android:fillViewport="true"
+    android:scrollbars="none">
 
-    <FrameLayout
-        android:layout_width="match_parent"
+    <HorizontalScrollView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/white">
+        android:layout_gravity="center_horizontal"
+        android:background="@color/blue"
+        android:fillViewport="true"
+        android:scrollbars="none">
 
         <FrameLayout
-            android:id="@+id/fl"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@android:color/white">
+            android:layout_gravity="center_vertical"
+            android:background="@color/green">
+            <!--<TextView-->
+            <!--android:layout_width="300px"-->
+            <!--android:layout_height="100px"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:gravity="center"-->
+            <!--android:text="人员" />-->
 
+            <FrameLayout
+                android:id="@+id/fl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#ffffff">
+
+            </FrameLayout>
         </FrameLayout>
-    </FrameLayout>
+    </HorizontalScrollView>
 </ScrollView>
 
