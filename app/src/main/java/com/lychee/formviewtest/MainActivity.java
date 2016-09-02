@@ -282,8 +282,9 @@ public class MainActivity extends AppCompatActivity {
             params.topMargin = top;
 
             if ("1".equals(item.getExtra())) {
-                X.setBackgroundDrawable(getResources().getDrawable(R.drawable.dash_line));
-                X.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                X.setBackgroundColor(Color.BLUE);
+//                X.setBackgroundDrawable(getResources().getDrawable(R.drawable.dash_line));
+//                X.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             } else {
                 X.setBackgroundColor(Color.GREEN);
             }
