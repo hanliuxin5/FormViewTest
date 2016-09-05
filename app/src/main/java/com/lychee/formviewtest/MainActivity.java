@@ -3,11 +3,11 @@ package com.lychee.formviewtest;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,10 +28,10 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     FrameLayout fl;
-    Button b1;
-    Button b2;
-    Button b3;
-    Button b4;
+//    Button b1;
+//    Button b2;
+//    Button b3;
+//    Button b4;
 
     //理论布局范围
     float maxX;
@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     float scalyX;
     float scalyY;
     int supplementX;
+    int supplementY;
+
     //初始显示人员viewGroup
     int w_width;
     int w_height;
@@ -59,14 +61,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         fl = (FrameLayout) findViewById(R.id.fl);
-        b1 = (Button) findViewById(R.id.b1);
-        b2 = (Button) findViewById(R.id.b2);
-        b3 = (Button) findViewById(R.id.b3);
-        b4 = (Button) findViewById(R.id.b4);
-        b1.setOnClickListener(onClickListener);
-        b2.setOnClickListener(onClickListener);
-        b3.setOnClickListener(onClickListener);
-        b4.setOnClickListener(onClickListener);
+        hideSystemUI();
+        fl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideSystemUI();
+            }
+        });
         //获取屏幕数据
         getScreenInfo();
         //获取数据
@@ -75,27 +76,10 @@ public class MainActivity extends AppCompatActivity {
         //6ba4a4debe744bcc695559472196c259 复杂
         //ea97edfec1a47f1d27cfc8a68280a423 很复杂混双
 
+        loadUI("bb5aeed101041d5a0a37e44d6d5e29f8");
+
     }
 
-    View.OnClickListener onClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()) {
-                case R.id.b1:
-                    loadUI("fa315fce76c61a319601014f1d601a79");
-                    break;
-                case R.id.b2:
-                    loadUI("9db5fe0082936fa914e5d41cd14e7ddc");
-                    break;
-                case R.id.b3:
-                    loadUI("6ba4a4debe744bcc695559472196c259");
-                    break;
-                case R.id.b4:
-                    loadUI("ea97edfec1a47f1d27cfc8a68280a423");
-                    break;
-            }
-        }
-    };
 
     private void loadUI(String id) {
         fl.removeAllViews();
@@ -117,6 +101,20 @@ public class MainActivity extends AppCompatActivity {
         width = dm.widthPixels;
         height = dm.heightPixels;
         LogUtil.i("屏幕尺寸：宽度 = " + width + "px, 高度 = " + height + "px, 密度 = " + dm.densityDpi + "dpi");
+    }
+
+    private void hideSystemUI() {
+        View decorView = getWindow().getDecorView();
+        // Set the IMMERSIVE flag.
+        // Set the content to appear under the system bars so that the content
+        // doesn't resize when the system bars hide and show.
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
     }
 
     private void seekMaxX(OldCellBean bean) {
@@ -212,46 +210,69 @@ public class MainActivity extends AppCompatActivity {
 //        supplementX = Integer.parseInt(x0.getX1());
 //        float k1 = (maxX - supplementX) / width;
         float k1 = maxX / width;
+//        float k1 = 1f;
+
         float k2 = maxY / height;
 
 
         scalyX = k1;
-        scalyY = k1;
-        if (scalyY > 12) {
-            scalyY = (float) (k1 / 1.5);
-        }
-        if (raceType == 2) {
-            fontSize = 9;
-            avatarSize = 0.6f;
-        }
+        scalyY = k2;
+//        if (k1 > 12) {
+////            scalyY = k1;
+////        scalyY = (float) (k1 / 1.5);
+//            fontSize = (int) (fontSize / scalyY * 8 + 0.5f);
+//        }
+//        if (raceType == 2) {
+//            avatarSize = 0.6f;
+//        }
 //        if(raceType)
 //        scalyY = (float) (k1 / 1.5);
+        LogUtil.d("scalyX=" + scalyX + ",scalyY=" + scalyY);
+        LogUtil.d("k1=" + k1 + ",k2=" + k2);
+        LogUtil.d("fontSize=" + fontSize);
 
-        LogUtil.d("scalyX=" + scalyX + ",scalyY" + scalyY);
-
-
-        w_width = (int) (Integer.parseInt(x0.getX1()) / scalyX);
-        w_height = (int) ((Integer.parseInt(x1.getY1()) - Integer.parseInt(x0.getY1())) / 2 / scalyY);
+        w_width = (int) (Integer.parseInt(x0.getX1()) / scalyX + 0.5f);
+        w_height = (int) ((Integer.parseInt(x1.getY1()) - Integer.parseInt(x0.getY1())) / 2 / scalyY + 0.5f);
 
         LogUtil.d("修正前：w_width=" + w_width + ",w_height=" + w_height);
 
-        if (w_width > 400 || w_width < 300) {
-            supplementX = w_width - 400;
-            w_width = 400;
-
-//            (int) (maxY / scalyY) + 29
-//            (int) (width + Math.abs(supplementX))
-//            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//            fl.setBackgroundColor(Color.parseColor("#ffffff"));
-//            fl.setLayoutParams(params);
+        if (w_width < 150) {
+            supplementX = w_width - 200;
+            w_width = 200;
+            if (raceType == 2) {
+                supplementX = w_width - 300;
+                w_width = 300;
+            }
         }
+//        else if (w_width > 400) {
+//            supplementX = w_width - 300;
+//            w_width = 300;
+//            if (raceType == 2) {
+//                supplementX = w_width - 600;
+//                w_width = 600;
+//            }
+//            supplementX = w_width - 400;
+//            w_width = 400;
+//            fontSize = fontSize * w_width / 400;
+//        }
+
+
+        fontSize = (int) (fontSize * (w_height / 46.0f / 1.7f));
+
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.CENTER_VERTICAL;
+        fl.setBackgroundColor(Color.parseColor("#ffffff"));
+        fl.setLayoutParams(params);
+        supplementY = (int) (Integer.parseInt(x0.getY1()) / scalyY - w_height / 2);
 
         drawX(bean.getResult().getSeats().getXline());
         drawY(bean.getResult().getSeats().getYline());
 
 
         drawLotBooks(bean.getResult().getLotbook(), bean.getResult().getSeats().getXline());
-        LogUtil.d("修正后：w_width=" + w_width + ",w_height=" + w_height + ",supplementX=" + supplementX);
+        LogUtil.d("修正后：w_width=" + w_width + ",w_height=" + w_height +
+                ",supplementX=" + supplementX + ",supplementY=" + supplementY +
+                ",fontSize=" + fontSize);
 
 
     }
@@ -264,22 +285,23 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < list.size(); i++) {
 
             item = list.get(i);
-            int width = Math.abs((int) ((Integer.parseInt(item.getX2()) - Integer.parseInt(item.getX1())) / scalyX));
+            int width = Math.abs((int) ((Integer.parseInt(item.getX2()) - Integer.parseInt(item.getX1())) / scalyX + 0.5f));
             int height = ScreenUtils.pxToDpCeilInt(this, 2);
             int left = 0;
             if (item.getSortNo().split("-").length == 3) {
-                left = (int) (Integer.parseInt(item.getX1()) / scalyX);
+                left = (int) (Integer.parseInt(item.getX1()) / scalyX + 0.5f);
             } else if (item.getSortNo().split("-").length == 4) {
-                left = (int) (Integer.parseInt(item.getX2()) / scalyX);
+                left = (int) (Integer.parseInt(item.getX2()) / scalyX + 0.5f);
 
             }
             int top = (int) (Integer.parseInt(item.getY1()) / scalyY);
+//            LogUtil.d("X轴线长度" + left);
 
             X = new ImageView(this);
             params = new FrameLayout.LayoutParams(width, height);
             params.leftMargin = left - supplementX;
 //            params.leftMargin = left;
-            params.topMargin = top;
+            params.topMargin = top - supplementY;
 
             if ("1".equals(item.getExtra())) {
                 X.setBackgroundColor(Color.BLUE);
@@ -312,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width, height);
             params.leftMargin = left - supplementX;
 //            params.leftMargin = left;
-            params.topMargin = top;
+            params.topMargin = top - supplementY;
             Y.setBackgroundColor(Color.RED);
             Y.setLayoutParams(params);
             fl.addView(Y);
@@ -341,7 +363,7 @@ public class MainActivity extends AppCompatActivity {
             fParams = new FrameLayout.LayoutParams(w_width, w_height);
             fParams.leftMargin = p_x;
             p_y = (int) (Integer.parseInt(x0.getY1()) / scalyY - w_height / 2);
-            fParams.topMargin = p_y;
+            fParams.topMargin = p_y - supplementY;
 
             whole = new LinearLayout(this);
             whole.setLayoutParams(fParams);
@@ -374,9 +396,9 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
 
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(w_width, w_height * 2);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, w_height * 2);
         params.leftMargin = left - supplementX;
-        params.topMargin = top - w_height;
+        params.topMargin = top - w_height - supplementY;
         layout.setLayoutParams(params);
 
 //        LogUtil.d("id===" + id);
@@ -401,21 +423,26 @@ public class MainActivity extends AppCompatActivity {
         people = new LinearLayout(this);
         people.setOrientation(LinearLayout.HORIZONTAL);
         people.setLayoutParams(lParams);
+
         people.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_frame_red));
 
         switch (raceType) {
             case 1:
             case 3:
                 avatar = new ImageView(this);
-                aParams = new LinearLayout.LayoutParams((int) (w_height * avatarSize), (int) (w_height * avatarSize));
+                aParams = new LinearLayout.LayoutParams((int) (w_height * avatarSize) - 4, (int) (w_height * avatarSize) - 4);
+                aParams.leftMargin = 4;
+                aParams.topMargin = 2;
+                aParams.bottomMargin = 2;
                 aParams.gravity = Gravity.CENTER_VERTICAL;
                 avatar.setLayoutParams(aParams);
                 ImageLoader.getInstance().displayImage(UiHelper.getImageUrl(lot.getIcon()), avatar, UiHelper.r360Options());
 
                 name = new TextView(this);
-                nParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (int) (w_height * avatarSize));
-                nParams.gravity = Gravity.CENTER_VERTICAL;
+                nParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, w_height);
                 name.setLayoutParams(nParams);
+                name.setGravity(Gravity.CENTER);
+//                name.setBackgroundColor(Color.parseColor("#aabbff"));
                 name.setText(lot.getName().equals("") ? "bye" : lot.getName());
                 name.setTextSize(fontSize);
 
@@ -425,18 +452,21 @@ public class MainActivity extends AppCompatActivity {
             case 2:
                 for (int i = 0; i < 2; i++) {
                     avatar = new ImageView(this);
-                    aParams = new LinearLayout.LayoutParams((int) (w_height * avatarSize), (int) (w_height * avatarSize));
+                    aParams = new LinearLayout.LayoutParams((int) (w_height * avatarSize) - 4, (int) (w_height * avatarSize) - 4);
+                    aParams.leftMargin = 4;
+                    aParams.topMargin = 2;
+                    aParams.bottomMargin = 2;
                     aParams.gravity = Gravity.CENTER_VERTICAL;
                     avatar.setLayoutParams(aParams);
-                    ImageLoader.getInstance().displayImage(UiHelper.getImageUrl(lot.getIcon().split(";")[i]), avatar, UiHelper.r360Options());
+                    ImageLoader.getInstance().displayImage(UiHelper.getImageUrl(lot.getIcon().contains(";") ? lot.getIcon().split(";")[i] : ""), avatar, UiHelper.r360Options());
 
                     people.addView(avatar);
                 }
 
                 name = new TextView(this);
-                nParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (int) (w_height * avatarSize));
-                nParams.gravity = Gravity.CENTER_VERTICAL;
+                nParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, w_height);
                 name.setLayoutParams(nParams);
+                name.setGravity(Gravity.CENTER);
                 name.setText(lot.getName().equals("") ? "bye" : lot.getName());
                 name.setTextSize(fontSize);
 
@@ -465,15 +495,21 @@ public class MainActivity extends AppCompatActivity {
 
         String icon;
         String player;
-
-        int score1 = Integer.parseInt(score.getScore1());
-        int score2 = Integer.parseInt(score.getScore2());
+        int score1 = 0;
+        int score2 = 0;
+        if (!TextUtils.isEmpty(score.getScore1()))
+            score1 = Integer.parseInt(score.getScore1());
+        if (!TextUtils.isEmpty(score.getScore2()))
+            score2 = Integer.parseInt(score.getScore2());
         if (score1 > score2) {
             icon = score.getIcon1();
             player = score.getPlayer1();
-        } else {
+        } else if (score1 < score2) {
             icon = score.getIcon2();
             player = score.getPlayer2();
+        } else {
+            icon = "";
+            player = "";
         }
 
 
@@ -488,9 +524,10 @@ public class MainActivity extends AppCompatActivity {
 
                 name = new TextView(this);
                 nParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (int) (w_height * avatarSize));
-                nParams.gravity = Gravity.CENTER_VERTICAL;
                 name.setLayoutParams(nParams);
                 name.setText(player);
+                name.setGravity(Gravity.CENTER);
+
                 name.setTextSize(fontSize);
 
                 result.addView(avatar);
@@ -499,18 +536,19 @@ public class MainActivity extends AppCompatActivity {
             case 2:
                 for (int i = 0; i < 2; i++) {
                     avatar = new ImageView(this);
-                    aParams = new LinearLayout.LayoutParams((int) (w_height * avatarSize), (int) (w_height * avatarSize));
+                    aParams = new LinearLayout.LayoutParams((int) (w_height * avatarSize), w_height);
                     aParams.gravity = Gravity.CENTER_VERTICAL;
                     avatar.setLayoutParams(aParams);
-                    ImageLoader.getInstance().displayImage(UiHelper.getImageUrl(icon.split(";")[i]), avatar, UiHelper.r360Options());
+
+                    ImageLoader.getInstance().displayImage(UiHelper.getImageUrl(icon.contains(";") ? icon.split(";")[i] : ""), avatar, UiHelper.r360Options());
 
                     result.addView(avatar);
                 }
 
                 name = new TextView(this);
-                nParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (int) (w_height * avatarSize));
-                nParams.gravity = Gravity.CENTER_VERTICAL;
+                nParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, w_height);
                 name.setLayoutParams(nParams);
+                name.setGravity(Gravity.CENTER);
                 name.setText(player.equals("") ? "" : player);
                 name.setTextSize(fontSize);
 
