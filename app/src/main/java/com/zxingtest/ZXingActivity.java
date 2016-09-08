@@ -71,7 +71,7 @@ public class ZXingActivity extends AppCompatActivity {
         intent.putExtra(Intents.Scan.CHARACTER_SET, characterSet);
         intent.putExtra(Intents.Scan.WIDTH, 500);
         intent.putExtra(Intents.Scan.HEIGHT, 500);
-        // intent.putExtra(Intents.Scan.PROMPT_MESSAGE, "type your prompt message");
+//         intent.putExtra(Intents.Scan.PROMPT_MESSAGE, "type your prompt message");
         intent.setClass(this, CaptureActivity.class);
         startActivityForResult(intent, REQUEST_CODE);
     }

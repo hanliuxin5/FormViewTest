@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class OldCellsActivity extends AppCompatActivity {
 
     FrameLayout fl;
 //    Button b1;
@@ -75,8 +75,9 @@ public class MainActivity extends AppCompatActivity {
         //9db5fe0082936fa914e5d41cd14e7ddc 简单
         //6ba4a4debe744bcc695559472196c259 复杂
         //ea97edfec1a47f1d27cfc8a68280a423 很复杂混双
+        //2150326876238429a7f45263a2252c11 待开赛状态
 
-        loadUI("bb5aeed101041d5a0a37e44d6d5e29f8");
+        loadUI("2150326876238429a7f45263a2252c11");
 
     }
 
